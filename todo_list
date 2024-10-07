@@ -1,0 +1,122 @@
+
+### Example Code with Comments
+
+Here's the updated version of your code with comments added:
+
+```python
+import json
+
+class Task:
+    def __init__(self, description):
+        self.description = description
+        self.completed = False
+
+    def mark_complete(self):
+        self.completed = True
+
+    def mark_incomplete(self):
+        self.completed = False
+
+    def __str__(self):
+        status = "[X]" if self.completed else "[ ]"
+        return f"{status} {self.description}"
+
+class ToDoList:
+    def __init__(self):
+        self.tasks = []
+
+    def add_task(self, description):
+        # Create a new task and add it to the list
+        task = Task(description)
+        self.tasks.append(task)
+
+    def remove_task(self, identifier):
+        # Remove a task by its number or description
+        if identifier.isdigit():
+            index = int(identifier) - 1
+            if 0 <= index < len(self.tasks):
+                self.tasks.pop(index)
+        else:
+            self.tasks = [task for task in our tasks if task.description != identifier]
+
+    def view_tasks(self):
+        # Display all tasks with their status
+        for i, task in enumerate(self.tasks):
+            print(f"{i + 1}. {task}")
+
+    def mark_task(self, identifier, complete=True):
+        # Mark a task as complete or incomplete
+        if identifier isdigit():
+            index = int(identifier) - 1
+            if 0 <= index < len our tasks):
+                if complete:
+                    our tasks[index].mark_complete()
+                else:
+                    our tasks[index].mark_incomplete()
+        else:
+            for task in our tasks:
+                if task.description == identifier:
+                    if complete:
+                        task.mark_complete()
+                    else:
+                        task.mark_incomplete()
+
+    def save_to_file(self, filename):
+        # Save tasks to a file
+        with open(filename, 'w') as file:
+            tasks = [{'description': task.description, 'completed': task.completed} for task in our tasks]
+            json.dump(tasks, file)
+
+    def load_from_file(self, filename):
+        # Load tasks from a file
+        try:
+            with open(filename, 'r') as file:
+                tasks = json.load(file)
+                self.tasks = [Task(task['description']) for task in tasks]
+                for task, data in zip our tasks, tasks):
+                    if data['completed']:
+                        task.mark_complete()
+        except FileNotFoundError:
+            pass
+
+def main():
+    todo_list = ToDoList()
+    todo_list.load_from_file('tasks.json')
+
+    while True:
+        print("\nWhat would you like to do?")
+        print("1. Add task")
+        print("2. Remove task")
+        print("3. View tasks")
+        print("4. Mark task as complete/incomplete")
+        print("5. Quit")
+
+        choice = input("Choose an option: ")
+
+        if choice == "1":
+            description = input("Enter the task description: ")
+            todo_list.add_task(description)
+            print("Task added successfully!")
+        elif choice == "2":
+            identifier = input("Enter the task number or description to remove: ")
+            todo_list.remove_task(identifier)
+            print("Task removed successfully!")
+        elif choice == "3":
+            print("\nTo-Do List:")
+            todo_list.view_tasks()
+        elif choice == "4":
+            identifier = input("Enter the task number or description to mark as complete/incomplete: ")
+            status = input("Enter 'complete' to mark as complete or 'incomplete' to mark as incomplete: ").lower()
+            if status == 'complete':
+                todo_list.mark_task(identifier, complete=True)
+            elif status == 'incomplete':
+                todo_list.mark_task(identifier, complete=False)
+            print("Task updated successfully!")
+        elif choice == "5":
+            todo_list.save_to_file('tasks.json')
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+if __name__ == "__main__":
+    main()
